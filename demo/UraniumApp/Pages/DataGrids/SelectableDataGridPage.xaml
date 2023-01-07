@@ -27,6 +27,30 @@
                     </material:DataGrid.EmptyView>
                     <material:DataGrid.Columns>
                         <material:DataGridSelectionColumn />
+                        <material:DataGridColumn>
+                            <material:DataGridColumn.CellItemTemplate>
+                                <DataTemplate>
+                                    <material:CheckBox>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CommonStates">
+                                                <VisualState x:Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="IsChecked" Value="True" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+
+                                                <VisualState x:Name="Unselected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="IsChecked" Value="False" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </material:CheckBox>
+                                </DataTemplate>
+                            </material:DataGridColumn.CellItemTemplate>
+                        </material:DataGridColumn>
+                        
                         <material:DataGridColumn Binding="{Binding Id}" Title="Identity" />
                         <material:DataGridColumn Binding="{Binding Name}" Title="Name" />
                         <material:DataGridColumn Binding="{Binding Age}" Title="Age" />

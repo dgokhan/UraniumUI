@@ -1,6 +1,9 @@
 ﻿using InputKit.Shared;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Reflection;
+using UraniumUI.Extensions;
 
 namespace UraniumUI.Material.Controls;
 public partial class DataGrid
@@ -48,12 +51,40 @@ public partial class DataGrid
 
     public View EmptyView { get => (View)GetValue(EmptyViewProperty); set => SetValue(EmptyViewProperty, value); }
 
-    public static readonly BindableProperty EmptyViewProperty = 
+    public static readonly BindableProperty EmptyViewProperty =
         BindableProperty.Create(nameof(EmptyView), typeof(View), typeof(DataGrid));
-    
+
     public DataTemplate EmptyViewTemplate { get => (DataTemplate)GetValue(EmptyViewTemplateProperty); set => SetValue(EmptyViewTemplateProperty, value); }
 
     public static readonly BindableProperty EmptyViewTemplateProperty =
         BindableProperty.Create(nameof(EmptyViewTemplate), typeof(DataTemplate), typeof(DataGrid),
             propertyChanged: (bo, ov, nv) => (bo as DataGrid).OnEmptyViewTemplateSet());
+
+    public static readonly BindableProperty IsSelectedProperty = BindableProperty.CreateAttached(
+        "IsSelected",
+        typeof(bool),
+        typeof(View),
+        false, propertyChanged: (bo, ov, nv) =>
+        {
+            if (ov == nv)
+            {
+                return;
+            }
+
+            IsSelectedChanged?.Invoke(bo, (bool)nv);
+
+            bo.NotifyPropertyChanged("IsSelected");
+        });
+
+    public static bool GetIsSelected(BindableObject target)
+    {
+        return (bool)target.GetValue(IsSelectedProperty);
+    }
+
+    public static void SetIsSelected(BindableObject target, bool value)
+    {
+        target.SetValue(IsSelectedProperty, value);
+    }
+
+    public static event EventHandler<bool> IsSelectedChanged;
 }

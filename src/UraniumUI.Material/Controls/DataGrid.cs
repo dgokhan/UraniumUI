@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 
 namespace UraniumUI.Material.Controls;
 
@@ -326,9 +325,13 @@ public partial class DataGrid : Frame
 
     protected void UpdateSelections()
     {
-        foreach (View child in _rootGrid.Children)
+        foreach (View child in _rootGrid.Children.Where(x => x is not BoxView))
         {
-            if (SelectedItems.Contains(child.BindingContext))
+            var isSelected = SelectedItems.Contains(child.BindingContext);
+
+            DataGrid.SetIsSelected(child, isSelected);
+
+            if (isSelected)
             {
                 VisualStateManager.GoToState(child, DataGridCellVisualStates.Selected);
             }

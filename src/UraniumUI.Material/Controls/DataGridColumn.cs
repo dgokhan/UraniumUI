@@ -2,7 +2,7 @@
 using System.Reflection;
 
 namespace UraniumUI.Material.Controls;
-public class DataGridColumn
+public class DataGridColumn : UraniumBindableObject
 {
     public string Title { get; set; }
 

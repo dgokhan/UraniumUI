@@ -9,21 +9,31 @@ public class DataGridSelectionColumn : DataGridColumn, IDataGridSelectionColumn
     {
         this.CellItemTemplate = new DataTemplate(() =>
         {
-            var checkBox = new  InputKit.Shared.Controls.CheckBox
+            var checkBox = new InputKit.Shared.Controls.CheckBox
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 Type = CheckBox.CheckType.Filled,
                 Margin = 10
             };
-
+            
             checkBox.Children.Remove(checkBox.Children.FirstOrDefault(x => x is Label));
 
-            //checkBox.SetBinding(CheckBox.IsCheckedProperty, new Binding(nameof(CellBindingContext.IsSelected), BindingMode.TwoWay));
-
-            var contentView = new ContentView
+            checkBox.ParentChanged += (s, e) =>
             {
-                Content = checkBox
+                if (checkBox.Parent != null)
+                {
+                    var b = new Binding();
+                    //checkBox.SetBinding(CheckBox.IsCheckedProperty, new Binding("IsSelected", BindingMode.TwoWay, source: null));
+
+                    checkBox.Parent.PropertyChanged += (s, e) =>
+                    {
+                        if (e.PropertyName == "IsSelected")
+                        {
+                            checkBox.IsChecked = DataGrid.GetIsSelected(checkBox.Parent);
+                        }
+                    };
+                }
             };
 
             checkBox.Color = ColorResource.GetColor("Primary", Colors.Red);
@@ -34,8 +44,8 @@ public class DataGridSelectionColumn : DataGridColumn, IDataGridSelectionColumn
             {
                 SelectionChanged?.Invoke(checkBox, checkBox.IsChecked);
             };
-
-            return contentView;
+            
+            return checkBox;
         });
     }
 }
